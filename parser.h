@@ -1,11 +1,12 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSER_H // "if not defined." header guard, avoids duplicate-definition errors
+#define PARSER_H // find and replace tool - tells preprocesser to change code before compiler sees it
 
-#include <string>
+#include <string> //java "import" equivalences
 #include <vector>
-#include <stdexcept>
+#include <stdexcept> // standard exception classes for err handling
 
-namespace gol {
+namespace gol { // NAMESPACE is a box to put related code in - prevents naming conflicts. GOL = Game of Life
+
 
 struct ParseResult {
     
