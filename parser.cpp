@@ -5,21 +5,21 @@
 
 namespace gol {
 
-static void parseHeader(std::istream& in, int& height, int& width) {
-
+static void parseHeader(std::istream& in, int& height, int& width) { // TODO: implement header parsing
+// must read/validate first non-empty line and set height/width
+// throw ParserError on any problems
     height = 0;
     width  = 0;
-   
 }
 
-char normalizeCellChar(char c, int lineIndex) {
+char convertCellChars(char c, int lineIndex) {
     if (c == 'X') return '0';
     if (c == 'O') return '1';
    
     throw ParserError("Invalid character", lineIndex);
 }
 
-std::string stripSpacesValidateWidth(const std::string& line,
+std::string whitespaceRemover(const std::string& line,
                                      int expectedWidth,
                                      int lineIndex) {
     std::string out;
@@ -27,7 +27,7 @@ std::string stripSpacesValidateWidth(const std::string& line,
     for (char c : line) {
         if (std::isspace(static_cast<unsigned char>(c))) continue;
 
-        out.push_back(normalizeCellChar(c, lineIndex));
+        out.push_back(convertCellChars(c, lineIndex));
     }
     if (expectedWidth >= 0 && static_cast<int>(out.size()) != expectedWidth) {
         throw ParserError("Invalid row length", lineIndex);
