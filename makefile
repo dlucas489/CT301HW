@@ -14,7 +14,7 @@ HEADER = $(wildcard *.h)
 
 OBJ = $(SRC:.cpp=.o)
 
-TARNAME = firstname_lastname
+TARNAME = devin_lucas
 
 # Target Name
 TARGET = GOLparser

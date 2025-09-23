@@ -5,11 +5,34 @@
 
 namespace gol {
 
-static void parseHeader(std::istream& in, int& height, int& width) { // TODO: implement header parsing
-// must read/validate first non-empty line and set height/width
-// throw ParserError on any problems
-    height = 0;
+static void parseHeader(std::istream& in, int& height, int& width) {
+    height = 0; //iunitialize
     width  = 0;
+    std::string line;
+    int lineIndex = 0;
+    while (std::getline(in, line)) {
+        bool nonblank = false;
+        for (char c : line) {
+            if (!std::isspace(static_cast<unsigned char>(c))) { nonblank = true; break; }
+        }
+        if (!nonblank) { ++lineIndex; continue; }
+        std::istringstream iss(line);
+        int h, w;
+        if (!(iss >> h) || !(iss >> w)) {
+            throw ParserError("Invalid or missing header", lineIndex);
+        }
+        std::string extra;
+        if (iss >> extra) {
+            throw ParserError("Invalid or missing header", lineIndex);
+        }
+        if (h <= 0 || w <= 0) {
+            throw ParserError("Invalid or missing header", lineIndex);
+        }
+        height = h;
+        width = w;
+        return;
+    }
+    throw ParserError("Invalid or missing header", lineIndex);
 }
 
 char convertCellChars(char c, int lineIndex) {
@@ -48,4 +71,4 @@ ParseResult parseFile(const std::string& filename) {
     return result;
 }
 
-} 
+}
