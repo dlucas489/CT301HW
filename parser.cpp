@@ -68,6 +68,57 @@ ParseResult parseFile(const std::string& filename) {
 
     parseHeader(fin, result.height, result.width);
 
+    // reopen file to compute 0-based line indices and locate header
+    std::ifstream fin2(filename);
+    if (!fin2) {
+        throw ParserError("File not found: " + filename, -1);
+    }
+
+    std::string line;
+    int lineIdx = 0;
+    int headerLineIdx = -1;
+    while (std::getline(fin2, line)) {
+        bool nonblank = false;
+        for (char c : line) {
+            if (!std::isspace(static_cast<unsigned char>(c))) { nonblank = true; break; }
+        }
+        if (nonblank) {
+            headerLineIdx = lineIdx;
+            break;
+        }
+        ++lineIdx;
+    }
+
+    if (headerLineIdx < 0) {
+        throw ParserError("Invalid or missing header", 0);
+    }
+
+    // start reading immediately after header line
+    ++lineIdx; // next line index to read
+    int rowsRead = 0;
+    while (std::getline(fin2, line)) {
+        bool nonblank = false;
+        for (char c : line) {
+            if (!std::isspace(static_cast<unsigned char>(c))) { nonblank = true; break; }
+        }
+
+        if (!nonblank) { ++lineIdx; continue; }
+
+        if (rowsRead >= result.height) {
+            throw ParserError("Invalid column height", lineIdx);
+        }
+
+        std::string row = whitespaceRemover(line, result.width, lineIdx);
+        result.grid2D.push_back(row);
+        result.grid1D += row;
+        ++rowsRead;
+        ++lineIdx;
+    }
+
+    if (rowsRead < result.height) {
+        throw ParserError("Invalid column height", lineIdx);
+    }
+
     return result;
 }
 
