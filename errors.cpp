@@ -9,7 +9,7 @@ int reportAndReturn(const std::string& message, int lineIndex) { //main err prin
     if (lineIndex >= 0) {
         int displayLine = lineIndex + 1; // Line nums shown to user are 1-based
         std::cerr << "Error: " << message << " on line " << displayLine << '\n'; //print err msg
-        std::cerr << "Return Code: " << displayLine +1 << '\n'; 
+        std::cerr << "Return Code: " << displayLine + 1 << '\n'; 
         return displayLine; // returns exit code to caller (main)
     } else { // error but no line
         std::cerr << "Error: " << message << '\n';
