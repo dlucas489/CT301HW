@@ -1,20 +1,17 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -Wfatal-errors -std=c++20
 
-TARGET = HW2.a
-SRCS = GameOfLife.cpp
+TARGET = GOLApp
+SRCS = GOLApp.cpp GameOfLife.cpp parser.cpp errors.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	ar rcs $(TARGET) $(OBJS)
-
-GameOfLife.o: GameOfLife.cpp GameOfLife.h
-	$(CXX) $(CXXFLAGS) -c GameOfLife.cpp
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
 
 clean:
 	rm -f $(OBJS) $(TARGET)
 
 package: clean
-	tar -cvf HW2_devin_lucas.tar GameOfLife.cpp GameOfLife.h Makefile
+	tar -cvf HW3_devin_lucas.tar $(SRCS) GameOfLife.h parser.h errors.h Makefile README.md
