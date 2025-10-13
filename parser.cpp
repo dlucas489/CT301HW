@@ -32,7 +32,10 @@ static void parseHeader(std::istream& in, int& height, int& width) {
         width = w;
         return;
     }
-    throw ParserError("Invalid or missing header", lineIndex);
+    // No header found. Treat as an empty board (height=0, width=0) instead of error.
+    height = 0;
+    width = 0;
+    return;
 }
 
 char convertCellChars(char c, int lineIndex) {
@@ -90,6 +93,12 @@ ParseResult parseFile(const std::string& filename) {
     }
 
     if (headerLineIdx < 0) {
+        // No header line found. If header was parsed as empty (0x0),
+        // return an empty ParseResult instead of throwing an error.
+        if (result.height == 0 && result.width == 0) {
+            return result;
+        }
+
         throw ParserError("Invalid or missing header", 0);
     }
 

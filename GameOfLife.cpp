@@ -45,4 +45,6 @@ void GameOfLife::printGame() const {
     std::cout << "Generation: " << generation << '\n';
     for (int r = 0; r < height; ++r)
         std::cout << board.substr(r * width, width) << '\n';
+
+    std::cout << '\n';
 }
